@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Income - FinMate</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 min-h-screen p-6">
+  <h2 class="text-3xl font-bold mb-6 text-gray-800">📈 Income</h2>
+  <div class="bg-white p-6 rounded-2xl shadow">
+    <ul id="incomeList" class="divide-y divide-gray-200"></ul>
+  </div>
+
+  <script>
+    const incomes = [
+      { source: "Salary", amount: 4000 },
+      { source: "Freelance", amount: 1000 },
+      { source: "Investments", amount: 500 }
+    ];
+    const list = document.getElementById("incomeList");
+    incomes.forEach(i => {
+      list.innerHTML += `
+        <li class="py-3 flex justify-between items-center hover:bg-gray-50 px-2 rounded-lg transition">
+          <span class="font-medium text-gray-700">${i.source}</span>
+          <span class="text-green-600 font-semibold">+$${i.amount}</span>
+        </li>
+      `;
+    });
+  </script>
+</body>
+</html>

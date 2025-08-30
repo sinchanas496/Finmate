@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>FinMate Dashboard</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body class="bg-gradient-to-br from-indigo-50 via-white to-purple-50 min-h-screen font-sans">
+  
+  <!-- NAVBAR -->
+  <nav class="bg-white shadow-lg px-6 py-4 flex justify-between items-center">
+    <h1 class="text-2xl font-bold text-indigo-600">FinMate Dashboard</h1>
+    <div>
+      <a href="expenses.html" class="text-gray-600 hover:text-indigo-600 mx-3">Expenses</a>
+      <a href="budgets.html" class="text-gray-600 hover:text-indigo-600 mx-3">Budgets</a>
+      <a href="receipts.html" class="text-gray-600 hover:text-indigo-600 mx-3">Receipts</a>
+    </div>
+  </nav>
+
+  <!-- DASHBOARD -->
+  <div class="p-8 grid grid-cols-1 md:grid-cols-3 gap-6">
+
+    <!-- Total Expenses -->
+    <div class="bg-white rounded-2xl shadow-md p-6">
+      <h2 class="text-gray-500 text-sm font-semibold">Total Expenses</h2>
+      <p id="totalExpenses" class="text-3xl font-bold text-red-500 mt-2">₹0</p>
+    </div>
+
+    <!-- Total Budget -->
+    <div class="bg-white rounded-2xl shadow-md p-6">
+      <h2 class="text-gray-500 text-sm font-semibold">Total Budget</h2>
+      <p id="totalBudget" class="text-3xl font-bold text-green-500 mt-2">₹0</p>
+    </div>
+
+    <!-- Remaining Balance -->
+    <div class="bg-white rounded-2xl shadow-md p-6">
+      <h2 class="text-gray-500 text-sm font-semibold">Remaining Balance</h2>
+      <p id="remainingBalance" class="text-3xl font-bold text-indigo-500 mt-2">₹0</p>
+    </div>
+
+  </div>
+
+  <!-- CHARTS -->
+  <div class="p-8 grid grid-cols-1 lg:grid-cols-2 gap-6">
+    
+    <!-- Expense Breakdown -->
+    <div class="bg-white rounded-2xl shadow-md p-6">
+      <h2 class="text-gray-700 font-semibold mb-4">Expense Breakdown</h2>
+      <canvas id="expenseChart"></canvas>
+    </div>
+
+    <!-- Monthly Trend -->
+    <div class="bg-white rounded-2xl shadow-md p-6">
+      <h2 class="text-gray-700 font-semibold mb-4">Monthly Trend</h2>
+      <canvas id="monthlyChart"></canvas>
+    </div>
+
+  </div>
+
+  <!-- JS LOGIC -->
+  <script>
+    // Dummy Data (replace with localStorage or backend later)
+    const expenses = [
+      { category: "Food", amount: 1200, month: "Aug" },
+      { category: "Transport", amount: 800, month: "Aug" },
+      { category: "Shopping", amount: 2000, month: "Aug" },
+      { category: "Bills", amount: 1500, month: "Aug" }
+    ];
+    const budget = 8000;
+
+    // Calculate totals
+    const totalExpenses = expenses.reduce((sum, e) => sum + e.amount, 0);
+    const remainingBalance = budget - totalExpenses;
+
+    document.getElementById("totalExpenses").textContent = "₹" + totalExpenses;
+    document.getElementById("totalBudget").textContent = "₹" + budget;
+    document.getElementById("remainingBalance").textContent = "₹" + remainingBalance;
+
+    // Expense Breakdown Chart
+    const expenseCtx = document.getElementById("expenseChart").getContext("2d");
+    new Chart(expenseCtx, {
+      type: "doughnut",
+      data: {
+        labels: [...new Set(expenses.map(e => e.category))],
+        datasets: [{
+          data: expenses.map(e => e.amount),
+          backgroundColor: ["#6366F1", "#F87171", "#34D399", "#FBBF24"],
+        }]
+      }
+    });
+
+    // Monthly Trend Chart
+    const monthlyCtx = document.getElementById("monthlyChart").getContext("2d");
+    new Chart(monthlyCtx, {
+      type: "line",
+      data: {
+        labels: [...new Set(expenses.map(e => e.month))],
+        datasets: [{
+          label: "Expenses",
+          data: expenses.map(e => e.amount),
+          borderColor: "#6366F1",
+          fill: false,
+          tension: 0.3
+        }]
+      }
+    });
+  </script>
+</body>
+</html>

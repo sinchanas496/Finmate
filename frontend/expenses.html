@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Expenses - FinMate</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 min-h-screen p-6">
+  <h2 class="text-3xl font-bold mb-6 text-gray-800">💸 Expenses</h2>
+  <div class="overflow-x-auto bg-white rounded-2xl shadow">
+    <table class="min-w-full text-left">
+      <thead class="bg-gray-100">
+        <tr>
+          <th class="px-6 py-3 text-sm font-semibold text-gray-600">Date</th>
+          <th class="px-6 py-3 text-sm font-semibold text-gray-600">Category</th>
+          <th class="px-6 py-3 text-sm font-semibold text-gray-600">Amount</th>
+        </tr>
+      </thead>
+      <tbody id="expenseList" class="divide-y divide-gray-200"></tbody>
+    </table>
+  </div>
+
+  <script>
+    const expenses = [
+      { date: "2025-08-01", category: "Food", amount: 200 },
+      { date: "2025-08-02", category: "Shopping", amount: 100 },
+      { date: "2025-08-03", category: "Travel", amount: 50 }
+    ];
+    const tbody = document.getElementById("expenseList");
+    expenses.forEach(e => {
+      tbody.innerHTML += `
+        <tr class="hover:bg-gray-50 transition">
+          <td class="px-6 py-3 text-gray-700">${e.date}</td>
+          <td class="px-6 py-3 text-gray-700">${e.category}</td>
+          <td class="px-6 py-3 font-semibold text-red-500">-$${e.amount}</td>
+        </tr>
+      `;
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>OCR Upload - FinMate</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gradient-to-br from-emerald-50 via-white to-indigo-50 min-h-screen font-sans">
+
+  <!-- NAVBAR -->
+  <nav class="bg-white shadow-lg px-6 py-4 flex justify-between items-center">
+    <h1 class="text-2xl font-bold text-indigo-600">OCR Upload</h1>
+    <a href="dashboard.html" class="text-gray-600 hover:text-indigo-600">Dashboard</a>
+  </nav>
+
+  <!-- CONTENT -->
+  <div class="p-10 max-w-2xl mx-auto bg-white shadow-lg rounded-2xl mt-10">
+    <h2 class="text-xl font-semibold text-gray-700 mb-4">Upload Your Receipt</h2>
+    
+    <form id="ocrForm" class="space-y-4">
+      <input type="file" id="receiptFile" accept="image/*"
+        class="block w-full border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-indigo-400" required>
+      <button type="submit"
+        class="w-full bg-indigo-600 text-white py-2 rounded-lg hover:bg-indigo-700 transition">Upload & Extract</button>
+    </form>
+
+    <!-- OCR RESULT -->
+    <div id="ocrResult" class="mt-6 hidden">
+      <h3 class="text-lg font-semibold text-gray-700 mb-2">Extracted Data:</h3>
+      <pre class="bg-gray-100 p-4 rounded-lg text-sm text-gray-700" id="ocrText"></pre>
+    </div>
+  </div>
+
+  <script>
+    document.getElementById("ocrForm").addEventListener("submit", (e) => {
+      e.preventDefault();
+      const resultBox = document.getElementById("ocrResult");
+      const ocrText = document.getElementById("ocrText");
+      // 👉 Replace with backend API call for OCR
+      ocrText.textContent = "Store: Big Bazaar\nItem: Rice\nAmount: ₹1200\nDate: 2025-08-30";
+      resultBox.classList.remove("hidden");
+    });
+  </script>
+
+</body>
+</html>
