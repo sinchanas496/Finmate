@@ -6,8 +6,29 @@
   <title>Expenses - FinMate</title>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gray-50 min-h-screen p-6">
-  <h2 class="text-3xl font-bold mb-6 text-gray-800">💸 Expenses</h2>
+<body>
+<nav class="bg-white shadow-lg px-6 py-4 flex justify-between items-center">
+    <button onclick="window.location.href='index.html'" class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700">
+      ← Back to Home
+    </button>
+
+    <h1 class="text-2xl font-bold text-indigo-600">Expense Tracker</h1>
+     </nav>
+  <!-- Expense Form -->
+  <div class="bg-white p-6 rounded-2xl shadow mb-6">
+    <h3 class="text-xl font-semibold mb-4">Add New Expense</h3>
+    <form id="expenseForm" class="grid grid-cols-1 md:grid-cols-4 gap-4">
+      <input type="date" id="date" required class="border p-2 rounded">
+      <input type="text" id="category" placeholder="Category" required class="border p-2 rounded">
+      <input type="number" id="amount" placeholder="Amount" required class="border p-2 rounded">
+      <input type="text" id="description" placeholder="Description (optional)" class="border p-2 rounded col-span-1 md:col-span-2">
+      <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded col-span-1 md:col-span-4 hover:bg-blue-700 transition">
+        ➕ Add Expense
+      </button>
+    </form>
+  </div>
+
+  <!-- Expense List -->
   <div class="overflow-x-auto bg-white rounded-2xl shadow">
     <table class="min-w-full text-left">
       <thead class="bg-gray-100">
@@ -15,6 +36,7 @@
           <th class="px-6 py-3 text-sm font-semibold text-gray-600">Date</th>
           <th class="px-6 py-3 text-sm font-semibold text-gray-600">Category</th>
           <th class="px-6 py-3 text-sm font-semibold text-gray-600">Amount</th>
+          <th class="px-6 py-3 text-sm font-semibold text-gray-600">Description</th>
         </tr>
       </thead>
       <tbody id="expenseList" class="divide-y divide-gray-200"></tbody>
@@ -22,21 +44,60 @@
   </div>
 
   <script>
-    const expenses = [
-      { date: "2025-08-01", category: "Food", amount: 200 },
-      { date: "2025-08-02", category: "Shopping", amount: 100 },
-      { date: "2025-08-03", category: "Travel", amount: 50 }
-    ];
-    const tbody = document.getElementById("expenseList");
-    expenses.forEach(e => {
-      tbody.innerHTML += `
-        <tr class="hover:bg-gray-50 transition">
-          <td class="px-6 py-3 text-gray-700">${e.date}</td>
-          <td class="px-6 py-3 text-gray-700">${e.category}</td>
-          <td class="px-6 py-3 font-semibold text-red-500">-$${e.amount}</td>
-        </tr>
-      `;
+    const token = localStorage.getItem("token"); // your JWT after login
+
+    // Submit expense
+    document.getElementById("expenseForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const expenseData = {
+        date: document.getElementById("date").value,
+        category: document.getElementById("category").value,
+        amount: document.getElementById("amount").value,
+        description: document.getElementById("description").value,
+      };
+
+      const res = await fetch("http://localhost:5000/expenses", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": "Bearer " + token,
+        },
+        body: JSON.stringify(expenseData),
+      });
+
+      const data = await res.json();
+      if (data.success) {
+        document.getElementById("expenseForm").reset(); // clear form
+        loadExpenses(); // refresh table
+      } else {
+        alert(data.message || "❌ Error adding expense");
+      }
     });
+
+    // Load all expenses
+    async function loadExpenses() {
+      const res = await fetch("http://localhost:5000/expenses", {
+        headers: { "Authorization": "Bearer " + token }
+      });
+      const data = await res.json();
+
+      const tbody = document.getElementById("expenseList");
+      tbody.innerHTML = ""; // clear old rows
+
+      data.data.forEach(exp => {
+        const row = `<tr class="hover:bg-gray-50 transition">
+          <td class="px-6 py-3">${exp.date}</td>
+          <td class="px-6 py-3">${exp.category}</td>
+          <td class="px-6 py-3 font-semibold text-red-500">₹${exp.amount}</td>
+          <td class="px-6 py-3">${exp.description || "-"}</td>
+        </tr>`;
+        tbody.innerHTML += row;
+      });
+    }
+
+    // Load when page opens
+    loadExpenses();
   </script>
 </body>
 </html>

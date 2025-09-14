@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FinMate - Your Personal Finance Assistant</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gradient-to-br from-emerald-50 via-white to-indigo-50 text-gray-800 font-sans">
+
+  <!-- Navbar -->
+  <header class="bg-white/80 backdrop-blur-md shadow-md sticky top-0 z-50">
+    <div class="container mx-auto flex justify-between items-center py-4 px-6">
+      <div class="text-2xl font-extrabold bg-gradient-to-r from-emerald-600 to-indigo-600 bg-clip-text text-transparent">
+        💰 FinMate
+      </div>
+      <nav>
+        <ul class="flex space-x-8 font-medium">
+          <li><a href="home.html" class="hover:text-emerald-600 transition">Home</a></li>
+          <li><a href="#features" class="hover:text-emerald-600 transition">Features</a></li>
+          <li><a href="#about" class="hover:text-emerald-600 transition">About</a></li>
+          <li><a href="login.html" class="hover:text-emerald-600 transition">Login</a></li>
+          <li><a href="signup.html" class="hover:text-emerald-600 transition">Signup</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+<section class="container mx-auto flex flex-col md:flex-row items-center justify-between py-20 px-6 gap-10">
+  <!-- Text -->
+  <div class="md:w-1/2 space-y-6">
+    <h1 class="text-5xl md:text-6xl font-extrabold leading-tight">
+      Simplify Your <span class="bg-gradient-to-r from-emerald-600 to-indigo-600 bg-clip-text text-transparent">Finances</span> with FinMate
+    </h1>
+    <p class="text-lg text-gray-600 leading-relaxed">
+      Track expenses, manage budgets, monitor income, upload receipts, and visualize your financial health all in one smart platform.
+    </p>
+    <div class="flex space-x-4">
+      <a href="signup.html"
+        class="inline-block bg-gradient-to-r from-emerald-500 to-indigo-500 text-white font-semibold px-8 py-3 rounded-lg shadow-lg hover:opacity-90 transition">
+        Get Started
+      </a>
+      <a href="#about"
+        class="inline-block border-2 border-emerald-500 text-emerald-600 font-semibold px-8 py-3 rounded-lg hover:bg-emerald-50 transition">
+        Learn More
+      </a>
+    </div>
+  </div>
+  <!-- Image (Finance Illustration instead of chat bubbles) -->
+  <div class="md:w-1/2">
+    <img src=
+      alt="Finance management illustration"
+      class="w-full max-w-md mx-auto rounded-2xl shadow-xl hover:scale-105 transition">
+  </div>
+</section>
+
+  </section>
+
+  <!-- Features Section -->
+<section id="features" class="py-20 bg-gradient-to-b from-indigo-50 via-white to-indigo-50">
+  <div class="container mx-auto space-y-20 px-6">
+
+    <!-- Feature 1 -->
+    <div class="flex flex-col md:flex-row items-center gap-12 group">
+      <!-- Icon -->
+      <div class="flex-shrink-0 transform transition duration-500 group-hover:scale-110">
+        <div class="w-32 h-32 flex items-center justify-center rounded-2xl bg-gradient-to-r from-emerald-400 to-emerald-600 shadow-lg">
+          <img src="https://cdn-icons-png.flaticon.com/512/2331/2331970.png" alt="Expense Tracker" class="w-16 h-16">
+        </div>
+      </div>
+      <!-- Text -->
+      <div class="bg-white/70 backdrop-blur-md rounded-2xl shadow-xl p-8 transition transform group-hover:-translate-y-2 group-hover:shadow-2xl">
+        <h3 class="text-3xl font-extrabold text-emerald-600 mb-4">📊 Expense Tracker</h3>
+        <p class="text-gray-700 text-lg leading-relaxed">Track daily expenses and categorize them easily for better financial control.</p>
+      </div>
+    </div>
+
+    <!-- Feature 2 -->
+    <div class="flex flex-col md:flex-row-reverse items-center gap-12 group">
+      <div class="flex-shrink-0 transform transition duration-500 group-hover:scale-110">
+        <div class="w-32 h-32 flex items-center justify-center rounded-2xl bg-gradient-to-r from-indigo-400 to-indigo-600 shadow-lg">
+          <img src="https://cdn-icons-png.flaticon.com/512/1170/1170678.png" alt="Budget Manager" class="w-16 h-16">
+        </div>
+      </div>
+      <div class="bg-white/70 backdrop-blur-md rounded-2xl shadow-xl p-8 transition transform group-hover:-translate-y-2 group-hover:shadow-2xl">
+        <h3 class="text-3xl font-extrabold text-indigo-600 mb-4">💡 Budget Manager</h3>
+        <p class="text-gray-700 text-lg leading-relaxed">Plan and set monthly budgets to track your spending limits and save efficiently.</p>
+      </div>
+    </div>
+
+    <!-- Feature 3 -->
+    <div class="flex flex-col md:flex-row items-center gap-12 group">
+      <div class="flex-shrink-0 transform transition duration-500 group-hover:scale-110">
+        <div class="w-32 h-32 flex items-center justify-center rounded-2xl bg-gradient-to-r from-rose-400 to-rose-600 shadow-lg">
+          <img src="https://cdn-icons-png.flaticon.com/512/2331/2331942.png" alt="Income Manager" class="w-16 h-16">
+        </div>
+      </div>
+      <div class="bg-white/70 backdrop-blur-md rounded-2xl shadow-xl p-8 transition transform group-hover:-translate-y-2 group-hover:shadow-2xl">
+        <h3 class="text-3xl font-extrabold text-rose-600 mb-4">💵 Manage Income</h3>
+        <p class="text-gray-700 text-lg leading-relaxed">Monitor your salary, freelancing income, and investments all in one place.</p>
+      </div>
+    </div>
+
+    <!-- Feature 4 -->
+    <div class="flex flex-col md:flex-row-reverse items-center gap-12 group">
+      <div class="flex-shrink-0 transform transition duration-500 group-hover:scale-110">
+        <div class="w-32 h-32 flex items-center justify-center rounded-2xl bg-gradient-to-r from-yellow-400 to-orange-500 shadow-lg">
+          <img src="https://cdn-icons-png.flaticon.com/512/3144/3144456.png" alt="OCR Upload" class="w-16 h-16">
+        </div>
+      </div>
+      <div class="bg-white/70 backdrop-blur-md rounded-2xl shadow-xl p-8 transition transform group-hover:-translate-y-2 group-hover:shadow-2xl">
+        <h3 class="text-3xl font-extrabold text-yellow-600 mb-4">🧾 OCR Upload</h3>
+        <p class="text-gray-700 text-lg leading-relaxed">Upload your receipts and let FinMate extract amounts automatically with OCR.</p>
+      </div>
+    </div>
+
+    <!-- Feature 5 -->
+    <div class="flex flex-col md:flex-row items-center gap-12 group">
+      <div class="flex-shrink-0 transform transition duration-500 group-hover:scale-110">
+        <div class="w-32 h-32 flex items-center justify-center rounded-2xl bg-gradient-to-r from-purple-400 to-purple-600 shadow-lg">
+          <img src="https://cdn-icons-png.flaticon.com/512/1828/1828884.png" alt="Dashboard" class="w-16 h-16">
+        </div>
+      </div>
+      <div class="bg-white/70 backdrop-blur-md rounded-2xl shadow-xl p-8 transition transform group-hover:-translate-y-2 group-hover:shadow-2xl">
+        <h3 class="text-3xl font-extrabold text-purple-600 mb-4">📈 Dashboard</h3>
+        <p class="text-gray-700 text-lg leading-relaxed">Visualize income vs expenses trends with beautiful charts and insights.</p>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+  <!-- About Section -->
+  <section id="about" class="py-20 bg-emerald-50 text-center">
+    <h2 class="text-4xl font-bold text-gray-800 mb-6">About FinMate</h2>
+    <p class="max-w-3xl mx-auto text-gray-600 text-lg leading-relaxed">
+      FinMate isn’t just a finance tracker — it’s your personal money assistant.  
+      With advanced tracking, automated OCR receipt scanning, and insightful dashboards, FinMate empowers you to take control of your money and achieve your financial goals faster.
+    </p>
+    <div class="mt-8">
+      <a href="signup.html" class="bg-gradient-to-r from-emerald-500 to-indigo-500 text-white px-8 py-3 rounded-lg shadow-lg hover:scale-105 transition font-semibold">
+        Join FinMate Today 🚀
+      </a>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-gradient-to-r from-emerald-600 to-indigo-600 text-white text-center py-8">
+    <p class="text-lg">© 2025 FinMate. All Rights Reserved.</p>
+  </footer>
+
+</body>
+</html>

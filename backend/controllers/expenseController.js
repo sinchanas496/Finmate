@@ -1,45 +1,29 @@
 // backend/controllers/expenseController.js
-const db = require('../db/db');
+const Expense = require('../models/expenseModel');
 
-exports.addExpense = async (req, res) => {
+// Create expense
+exports.createExpense = async (req, res) => {
   try {
-    const user_id = req.user.userId; // from JWT
-    const {
-      category,       // varchar (ex: "Food")
-      amount,         // decimal
-      description,    // text or varchar
-      date,           // 'YYYY-MM-DD'
-      source = 'manual', // 'manual' | 'ocr'
-      receipt_id = null
-    } = req.body;
+    const { category, amount, description } = req.body;
+    if (!category || !amount) {
+      return res.status(400).json({ message: 'Category and amount required' });
+    }
 
-    if (!amount || !date)
-      return res.status(400).json({ msg: 'amount and date are required' });
-
-    // adjust columns list if your table differs
-    const [result] = await db.query(
-      `INSERT INTO expenses (user_id, category, amount, description, date, source, receipt_id)
-       VALUES (?,?,?,?,?,?,?)`,
-      [user_id, category || null, amount, description || null, date, source, receipt_id]
-    );
-
-    res.status(201).json({ msg: 'Expense added', expenseId: result.insertId });
-  } catch (e) {
-    console.error('Add expense error:', e);
-    res.status(500).json({ msg: 'Server error' });
+    await Expense.create(req.user.id, category, amount, description);
+    res.status(201).json({ success: true, message: 'Expense added' });
+  } catch (error) {
+    console.error('❌ Expense error:', error);
+    res.status(500).json({ message: 'Server error' });
   }
 };
 
+// Get expenses
 exports.getExpenses = async (req, res) => {
   try {
-    const user_id = req.user.userId;
-    const [rows] = await db.query(
-      `SELECT * FROM expenses WHERE user_id = ? ORDER BY date DESC, expense_id DESC`,
-      [user_id]
-    );
-    res.json(rows);
-  } catch (e) {
-    console.error('Get expenses error:', e);
-    res.status(500).json({ msg: 'Server error' });
+    const expenses = await Expense.findByUser(req.user.id);
+    res.json({ success: true, data: expenses });
+  } catch (error) {
+    console.error('❌ Fetch expenses error:', error);
+    res.status(500).json({ message: 'Server error' });
   }
 };

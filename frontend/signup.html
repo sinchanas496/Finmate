@@ -57,15 +57,16 @@
       const data = Object.fromEntries(fd.entries());
 
       try {
-        const res = await fetch('http://localhost:5000/api/users/signup', {
+        const res = await fetch('http://localhost:5000/users/signup', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(data)
         });
         const json = await res.json();
         if (res.ok) {
-          alert('Signup successful — please login');
-          window.location.href = 'login.html';
+          localStorage.setItem("token", json.token || ""); 
+          // 🔥 redirect straight to index.html
+          window.location.href = "index.html";
         } else {
           alert(json.message|| 'Signup failed');
         }

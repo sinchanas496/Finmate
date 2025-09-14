@@ -1,10 +1,12 @@
-// backend/routes/receiptRoutes.js
+// routes/receiptRoutes.js
 const express = require('express');
 const router = express.Router();
-const auth = require('../middleware/authmiddleware');
-const { uploadReceipt, getReceipts } = require('../controllers/receiptController');
+const receiptController = require('../controllers/receiptController');
 
-router.post('/', auth, uploadReceipt);
-router.get('/', auth, getReceipts);
+// upload (note: uploadReceipt is an array [multer, handler])
+router.post('/upload', receiptController.uploadReceipt);
+
+// get
+router.get('/', receiptController.getReceipts);
 
 module.exports = router;

@@ -1,32 +1,123 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Income - FinMate</title>
+  <title>FinMate - Income Tracker</title>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gray-50 min-h-screen p-6">
-  <h2 class="text-3xl font-bold mb-6 text-gray-800">📈 Income</h2>
-  <div class="bg-white p-6 rounded-2xl shadow">
-    <ul id="incomeList" class="divide-y divide-gray-200"></ul>
-  </div>
+
+<body class="bg-gray-100 min-h-screen font-sans">
+
+  <!-- Navbar -->
+  <nav class="bg-emerald-600 text-white px-6 py-4 flex justify-between items-center shadow-lg">
+    <h1 class="text-2xl font-bold">FinMate</h1>
+    <button onclick="logout()" class="bg-white text-emerald-600 px-4 py-2 rounded-lg hover:bg-gray-200">
+      Logout
+    </button>
+  </nav>
+
+  <section class="max-w-3xl mx-auto mt-10">
+
+    <h2 class="text-3xl font-bold text-gray-800 mb-6 text-center">Income Tracker</h2>
+
+    <!-- Income Form -->
+    <form id="incomeForm" class="bg-white p-6 rounded-lg shadow-md space-y-4">
+      <input type="text" id="source" placeholder="Source (e.g., Salary)" required
+        class="w-full border border-gray-300 rounded px-4 py-2">
+      <input type="number" id="amount" placeholder="Amount (₹)" step="0.01" required
+        class="w-full border border-gray-300 rounded px-4 py-2">
+      <input type="date" id="date" required class="w-full border border-gray-300 rounded px-4 py-2">
+      <textarea id="description" placeholder="Optional description"
+        class="w-full border border-gray-300 rounded px-4 py-2"></textarea>
+      <button type="submit"
+        class="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 w-full">Add Income</button>
+    </form>
+
+    <!-- Income Table -->
+    <h3 class="text-2xl font-semibold text-gray-700 mt-10 mb-4">Your Income Records</h3>
+    <table class="min-w-full bg-white rounded-lg shadow-md overflow-hidden">
+      <thead class="bg-gray-200 text-gray-600 uppercase text-sm font-semibold">
+        <tr>
+          <th class="p-3 text-left">Source</th>
+          <th class="p-3 text-left">Amount (₹)</th>
+          <th class="p-3 text-left">Date</th>
+          <th class="p-3 text-left">Description</th>
+        </tr>
+      </thead>
+      <tbody id="incomeTableBody" class="divide-y divide-gray-200"></tbody>
+    </table>
+
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-gray-200 text-center py-4 text-gray-600 text-sm mt-10">
+    © 2025 FinMate. All Rights Reserved.
+  </footer>
 
   <script>
-    const incomes = [
-      { source: "Salary", amount: 4000 },
-      { source: "Freelance", amount: 1000 },
-      { source: "Investments", amount: 500 }
-    ];
-    const list = document.getElementById("incomeList");
-    incomes.forEach(i => {
-      list.innerHTML += `
-        <li class="py-3 flex justify-between items-center hover:bg-gray-50 px-2 rounded-lg transition">
-          <span class="font-medium text-gray-700">${i.source}</span>
-          <span class="text-green-600 font-semibold">+$${i.amount}</span>
-        </li>
-      `;
+    const token = localStorage.getItem('token');
+    if (!token) window.location.href = 'login.html';
+
+    function logout() {
+      localStorage.removeItem('token');
+      window.location.href = 'home.html';
+    }
+
+    const incomeForm = document.getElementById('incomeForm');
+    const incomeTableBody = document.getElementById('incomeTableBody');
+
+    // Fetch and display all incomes
+    async function fetchIncomes() {
+      const res = await fetch("http://localhost:5000/incomes", {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      const data = await res.json();
+
+      if (data.success) {
+        incomeTableBody.innerHTML = data.data.map(income => `
+          <tr>
+            <td class="p-3">${income.source}</td>
+            <td class="p-3">₹${income.amount}</td>
+            <td class="p-3">${income.date}</td>
+            <td class="p-3">${income.description || '-'}</td>
+          </tr>
+        `).join('');
+      }
+    }
+
+    // Add new income
+    incomeForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const source = document.getElementById('source').value;
+      const amount = document.getElementById('amount').value;
+      const date = document.getElementById('date').value;
+      const description = document.getElementById('description').value;
+
+      const res = await fetch("http://localhost:5000/incomes/add",{
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({ source, amount, date, description })
+      });
+
+      const data = await res.json();
+      if (data.success) {
+        alert('Income added successfully!');
+        incomeForm.reset();
+        fetchIncomes();
+      } else {
+        alert(data.message || 'Failed to add income');
+      }
     });
+
+    // Initial fetch
+    fetchIncomes();
   </script>
+
 </body>
+
 </html>

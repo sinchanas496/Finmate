@@ -1,23 +1,21 @@
-const db = require("../db/db");
+// backend/models/expenseModel.js
+const db = require('../db/db');
 
-function addExpense(user_id, category, amount, description, date, source = "manual", receipt_id = null) {
-  return new Promise((resolve, reject) => {
-    const sql = `INSERT INTO expenses (user_id, category, amount, description, date, source, receipt_id) 
-                 VALUES (?, ?, ?, ?, ?, ?, ?)`;
-    db.query(sql, [user_id, category, amount, description, date, source, receipt_id], (err, result) => {
-      if (err) return reject(err);
-      resolve(result.insertId);
-    });
-  });
-}
+// Insert expense
+exports.create = async (userId, category, amount, description) => {
+  return await db.query(
+    `INSERT INTO expenses (user_id, category, amount, description) 
+     VALUES (?, ?, ?, ?)`,
+    [userId, category, amount, description || null]
+  );
+};
 
-function getExpenses(user_id) {
-  return new Promise((resolve, reject) => {
-    db.query("SELECT * FROM expenses WHERE user_id = ?", [user_id], (err, rows) => {
-      if (err) return reject(err);
-      resolve(rows);
-    });
-  });
-}
-
-module.exports = { addExpense, getExpenses };
+// Fetch expenses by user
+exports.findByUser = async (userId) => {
+  const [rows] = await db.query(
+    `SELECT expense_id, category, amount, description, date, source, receipt_id, created_at 
+     FROM expenses WHERE user_id = ? ORDER BY date DESC`,
+    [userId]
+  );
+  return rows;
+};

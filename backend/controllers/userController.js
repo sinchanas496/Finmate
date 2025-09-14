@@ -1,54 +1,70 @@
-// backend/controllers/userController.js
 const db = require('../db/db');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
+const generateToken = (userId) => {
+  return jwt.sign({ id: userId }, process.env.JWT_SECRET, { expiresIn: '1d' });
+};
+
+// Signup
 exports.signup = async (req, res) => {
   try {
     const { name, email, password } = req.body;
-    if (!name || !email || !password)
-      return res.status(400).json({ msg: 'All fields are required' });
 
-    // email unique check
-    const [exist] = await db.query('SELECT user_id FROM users WHERE email = ?', [email]);
-    if (exist.length) return res.status(409).json({ msg: 'Email already registered' });
+    // Check if user exists
+    const [existing] = await db.query('SELECT * FROM users WHERE email = ?', [email]);
+    if (existing.length > 0) {
+      return res.status(400).json({ message: 'User already exists' });
+    }
 
-    const hashed = await bcrypt.hash(password, 10);
+    // Hash password
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    // Insert new user
     const [result] = await db.query(
-      'INSERT INTO users (name, email, password) VALUES (?,?,?)',
-      [name, email, hashed]
+      'INSERT INTO users (name, email, password) VALUES (?, ?, ?)',
+      [name, email, hashedPassword]
     );
 
-    const user = { id: result.insertId, name, email };
-    res.status(201).json({ msg: 'User registered successfully', user });
-  } catch (e) {
-    console.error('Signup error:', e);
-    res.status(500).json({ msg: 'Server error' });
+    const token = generateToken(result.insertId);
+
+    res.status(201).json({
+      message: 'User registered successfully',
+      token,
+      user: { user_id: result.insertId, name, email }
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Server error' });
   }
 };
 
+// Login
 exports.login = async (req, res) => {
   try {
     const { email, password } = req.body;
-    if (!email || !password)
-      return res.status(400).json({ msg: 'Email and password required' });
 
     const [rows] = await db.query('SELECT * FROM users WHERE email = ?', [email]);
-    if (!rows.length) return res.status(401).json({ msg: 'Invalid credentials' });
+    if (rows.length === 0) {
+      return res.status(400).json({ message: 'Invalid credentials' });
+    }
 
     const user = rows[0];
-    const ok = await bcrypt.compare(password, user.password);
-    if (!ok) return res.status(401).json({ msg: 'Invalid credentials' });
 
-    const token = jwt.sign({ userId: user.user_id }, process.env.JWT_SECRET, { expiresIn: '1h' });
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+      return res.status(400).json({ message: 'Invalid credentials' });
+    }
+
+    const token = generateToken(user.user_id);
 
     res.json({
-      msg: 'Login successful',
+      message: 'Login successful',
       token,
-      user: { id: user.user_id, name: user.name, email: user.email },
+      user: { user_id: user.user_id, name: user.name, email: user.email }
     });
-  } catch (e) {
-    console.error('Login error:', e);
-    res.status(500).json({ msg: 'Server error' });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Server error' });
   }
 };
